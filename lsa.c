@@ -17,6 +17,7 @@
 #include <errno.h>
 
 #include "fmode.h"
+#include "perm_filters.h"
 
 int main(int argc, char **argv)
 {
@@ -38,20 +39,22 @@ int main(int argc, char **argv)
 	
 	if((n = scandir(dirname, &list, NULL, alphasort)) < 0)
 	{
-		perror("scandir()");
+		perror("main()/scandir()");
 		return -1;
 	}
 	for(i=0; i < n; i++)
 	{
-		// prepend file name with directory (needed for dirs other than .)			
+		// prepend file name with directory (needed for dirs other than .)
 		snprintf(fname, sizeof fname, "%s/%s", dirname, list[i]->d_name);
 		
 		// get file info
 		if(lstat(fname, &finfo) == -1)
 		{
-			perror("stat()");
+			perror("main()/stat()");
 			continue;
 		}
+
+		if(!filter_none(&finfo))break;
 
 		// type and permissions
 		printf("%1c%9.9s ", ftype(finfo.st_mode), fperm(finfo.st_mode));
