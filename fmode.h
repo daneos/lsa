@@ -1,7 +1,14 @@
+/*
+ * lsa - list only those files you have permission to
+ * Copyright (C) 2014 daneos.
+ * Released under the GNU GPL 2.0 license
+ */
+
 #if !defined(__FMODE_H__)
 #define __FMODE_H__
 
 #include <math.h>
+#include <sys/types.h>
 
 #define GB 1073741824
 #define MB 1048576
@@ -9,7 +16,7 @@
 //-----------------------------------------------------------------------------
 static char *fperm(mode_t mode);
 char ftype(mode_t mode);
-void fsize(off_t size, char *buf);
+static char *fsize(off_t size);
 
 //-----------------------------------------------------------------------------
 static char *fperm(mode_t mode)
@@ -55,8 +62,9 @@ char ftype(mode_t mode)
 }
 
 //-----------------------------------------------------------------------------
-void fsize(off_t size, char *buf)
+static char *fsize(off_t size)
 {
+	static char buf[10];
 	if(size > GB)
 		snprintf(buf, sizeof buf, "%.0fG", round(size/GB));
 	else if(size > MB)
@@ -65,7 +73,7 @@ void fsize(off_t size, char *buf)
 		snprintf(buf, sizeof buf, "%.0fK", round(size/KB));
 	else
 		snprintf(buf, sizeof buf, "%d", (int)size);
-	return;
+	return buf;
 }
 
 //-----------------------------------------------------------------------------
