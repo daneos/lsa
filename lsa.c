@@ -6,28 +6,20 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <dirent.h>
-#include <pwd.h>
-#include <grp.h>
-#include <time.h>
-#include <locale.h>
-#include <langinfo.h>
-#include <stdio.h>
 #include <linux/limits.h>
-#include <errno.h>
+#include <dirent.h>
+#include <stdio.h>
 
 #include "fmode.h"
 #include "perm_filters.h"
+#include "print_entry.h"
 
+//-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 	struct stat finfo;
-	struct passwd *pwd;
-	struct group *grp;
-	struct tm *tm;
-	char datestring[256];
 	char *dirname;
-	char fname[PATH_MAX];
+	char fname[PATH_MAX+1];
 	int n,i;
 	struct dirent **list;
 
@@ -54,43 +46,8 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		if(!filter_none(&finfo))break;
-
-		// type and permissions
-		printf("%1c%9.9s ", ftype(finfo.st_mode), fperm(finfo.st_mode));
-
-		// owner
-		if((pwd = getpwuid(finfo.st_uid)) != NULL)
-			printf("%10.10s:", pwd->pw_name);
-		else
-			printf("%10.10d:", finfo.st_uid);
-
-		// group
-		if((grp = getgrgid(finfo.st_gid)) != NULL)
-			printf("%-10.10s", grp->gr_name);
-		else
-			printf("%-10.10d", finfo.st_gid);
-
-		// size in reasonable format
-		printf(" %8s", fsize(finfo.st_size));
-
-		// get datestring
-		tm = localtime(&finfo.st_mtime);
-		strftime(datestring, sizeof(datestring), nl_langinfo(D_T_FMT), tm);
-
-		// if link get its destination
-		if((finfo.st_mode & S_IFMT) == S_IFLNK)
-		{
-			char buf[PATH_MAX];
-			int len = readlink(fname, buf, sizeof buf);
-			snprintf(fname, sizeof fname, " -> %s", buf);
-			fname[len+4] = '\0';
-		}
-		else
-			fname[0] = '\0';
-
-		// print date, name, and destination (if applicable)
-		printf("  %s\t%s%s\n", datestring, list[i]->d_name, fname);
+		if(!filter_perm(&finfo, S_IWOTH))continue;
+		print_long(&finfo, fname, list[i]->d_name);
 	}
 	return 0;
 }

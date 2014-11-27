@@ -11,12 +11,13 @@
 #include <sys/stat.h>
 
 //-----------------------------------------------------------------------------
-int filter_none(const struct stat *finfo);
+inline int filter_perm(const struct stat *f, mode_t mask);
 
 //-----------------------------------------------------------------------------
-int filter_none(const struct stat *finfo)
+inline int filter_perm(const struct stat *f, mode_t mask)
 {
-	return 1;
+	if(mask == NULL) return 1;
+	return f->st_mode & mask;
 }
 
 //-----------------------------------------------------------------------------
