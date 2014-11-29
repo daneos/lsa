@@ -1,7 +1,7 @@
 /*
  * lsa - list only those files you have permission to
  * Copyright (C) 2014 daneos.
- * Released under the GNU GPL 2.0 license
+ * Released under the GNU GPL v2 license
  */
 
 #if !defined(__FMODE_H__)
@@ -36,7 +36,7 @@ static char *fperm(mode_t mode)
 	if(mode & S_ISVTX)
 		bits[8] = (mode & 0100) ? 't' : 'T';
 	bits[9] = '\0';
-	return(bits);
+	return bits;
 }
 
 //-----------------------------------------------------------------------------

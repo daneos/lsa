@@ -1,7 +1,7 @@
 /*
  * lsa - list only those files you have permission to
  * Copyright (C) 2014 daneos.
- * Released under the GNU GPL 2.0 license
+ * Released under the GNU GPL v2 license
  */
 
 #if !defined(__OPTIONS_H__)
@@ -33,19 +33,22 @@ typedef struct _config {
 
 //-----------------------------------------------------------------------------
 int options(int argc, char **argv, config *c);
+void print_help(char *name);
 
 //-----------------------------------------------------------------------------
 int options(int argc, char **argv, config *c)
 {
 	int o;
+	struct passwd *user;
 	memset(c, 0, sizeof c);
-	// set dir to current, should get overwritten if other dir is specified
+	// set dir and uid to current, should get overwritten if other specified
 	strncpy(c->dir, ".", sizeof c->dir);
+	c->uid = getuid();
 	
 	if(argc == 1) return OPT_EMPTY;
 
 	opterr = 0;
-	while((o = getopt(argc, argv, "rwxu:")) != -1)
+	while((o = getopt(argc, argv, "rwxu:h")) != -1)
 		switch(o)
 		{
 			case 'r':
@@ -58,7 +61,15 @@ int options(int argc, char **argv, config *c)
 				c->p.x = 1;
 				break;
 			case 'u':
-				// uid and gid
+				if((user = getpwnam(optarg)) == NULL)
+				{
+					perror("options()/getpwnam()");
+					return OPT_ERROR;
+				}
+				c->uid = user->pw_uid;
+				break;
+			case 'h':
+				print_help(argv[0]);
 				break;
 			
 			case '?':
@@ -75,6 +86,19 @@ int options(int argc, char **argv, config *c)
 		strncpy(c->dir, argv[optind], sizeof c->dir);		
 
 	return OPT_OK;
+}
+
+//-----------------------------------------------------------------------------
+void print_help(char *name)
+{
+	printf("Copyright (C) 2014 daneos.\nReleased under the GNU GPL v2 license.\n\n"
+		   "List only these files, you have access to\nUSAGE:\n"
+		   "   %s [-rwx] [-u username] [dir]\n\n"
+		   "   -rwx            which permissions shoud be checked (defaults to rw)\n"
+		   "   -u username     check permissions for specific user (defaults to current user)\n"
+		   "   dir             directory to list (defaults to .)\n\n"
+	, name);
+	exit(0);
 }
 
 //-----------------------------------------------------------------------------

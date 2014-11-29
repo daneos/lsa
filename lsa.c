@@ -1,7 +1,7 @@
 /*
  * lsa - list only those files you have permission to
  * Copyright (C) 2014 daneos.
- * Released under the GNU GPL 2.0 license
+ * Released under the GNU GPL v2 license
  */
 
 #include <sys/types.h>
