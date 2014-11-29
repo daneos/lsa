@@ -16,6 +16,7 @@
 #include <locale.h>
 #include <langinfo.h>
 #include <stdio.h>
+#include <unistd.h>
 
 //-----------------------------------------------------------------------------
 void print_long(const struct stat *f, const char *fname, const char *d_name);
@@ -32,11 +33,15 @@ void print_long(const struct stat *f, const char *fname, const char *dname)
 	// type and permissions
 	printf("%1c%9.9s ", ftype(f->st_mode), fperm(f->st_mode));
 	// owner
-	if((pwd = getpwuid(f->st_uid)) != NULL) printf("%10.10s:", pwd->pw_name);
-	else printf("%10.10d:", f->st_uid);
+	if((pwd = getpwuid(f->st_uid)) != NULL)
+		printf("%10.10s:", pwd->pw_name);
+	else
+		printf("%10.10d:", f->st_uid);
 	// group
-	if((grp = getgrgid(f->st_gid)) != NULL) printf("%-10.10s", grp->gr_name);
-	else printf("%-10.10d", f->st_gid);
+	if((grp = getgrgid(f->st_gid)) != NULL)
+		printf("%-10.10s", grp->gr_name);
+	else
+		printf("%-10.10d", f->st_gid);
 	// size in reasonable format
 	printf(" %8s", fsize(f->st_size));
 	// get datestring

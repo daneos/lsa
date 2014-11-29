@@ -13,23 +13,30 @@
 #include "fmode.h"
 #include "perm_filters.h"
 #include "print_entry.h"
+#include "options.h"
 
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 	struct stat finfo;
-	char *dirname;
 	char fname[PATH_MAX+1];
-	int n,i;
+	int n,i, opts;
 	struct dirent **list;
+	config c;
 
-	// if no argument given, default to .
-	if(argc > 1)
-		dirname = argv[1];
-	else
-		dirname = ".";
+	opts = options(argc, argv, &c);
+	if(opts != OPT_OK)
+	{
+		// if no opts given, default to rw checking for current user
+		if(opts == OPT_EMPTY)
+		{
+			c.p.r = 1;
+			c.p.w = 1;
+		}
+		else return -1;
+	}
 	
-	if((n = scandir(dirname, &list, NULL, alphasort)) < 0)
+	if((n = scandir(c.dir, &list, NULL, alphasort)) < 0)
 	{
 		perror("main()/scandir()");
 		return -1;
@@ -37,7 +44,7 @@ int main(int argc, char **argv)
 	for(i=0; i < n; i++)
 	{
 		// prepend file name with directory (needed for dirs other than .)
-		snprintf(fname, sizeof fname, "%s/%s", dirname, list[i]->d_name);
+		snprintf(fname, sizeof fname, "%s/%s", c.dir, list[i]->d_name);
 		
 		// get file info
 		if(lstat(fname, &finfo) == -1)
@@ -46,7 +53,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		if(!filter_perm(&finfo, S_IWOTH))continue;
+		if(!filter_perm(&finfo, S_IWOTH)) continue;
 		print_long(&finfo, fname, list[i]->d_name);
 	}
 	return 0;
