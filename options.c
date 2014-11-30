@@ -88,8 +88,7 @@ int options(int argc, char **argv, config *c)
 //-----------------------------------------------------------------------------
 void print_help(char *name)
 {
-	printf("Version: %s\n"
-		   "Copyright (C) 2014 daneos.\nReleased under the GNU GPL v2 license.\n\n"
+	printf("Version: %s\nCopyright (C) 2014 daneos.\nReleased under the GNU GPL v2 license.\n\n"
 		   "List only these files, you have access to\nUSAGE:\n"
 		   "   %s [-rwx] [-u username] [dir]\n\n"
 		   "   -rwx            which permissions shoud be checked (defaults to rw)\n"
