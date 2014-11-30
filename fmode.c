@@ -4,24 +4,10 @@
  * Released under the GNU GPL v2 license
  */
 
-#if !defined(__FMODE_H__)
-#define __FMODE_H__
-
-#include <math.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#define GB 1073741824
-#define MB 1048576
-#define KB 1024
-//-----------------------------------------------------------------------------
-static char *fperm(mode_t mode);
-char ftype(mode_t mode);
-static char *fsize(off_t size);
+#include "include/fmode.h"
 
 //-----------------------------------------------------------------------------
-static char *fperm(mode_t mode)
+char *fperm(mode_t mode)
 {
 	// code by Jonathan Leffler
 	static char *rwx[] = {"---", "--x", "-w-", "-wx",
@@ -64,7 +50,7 @@ char ftype(mode_t mode)
 }
 
 //-----------------------------------------------------------------------------
-static char *fsize(off_t size)
+char *fsize(off_t size)
 {
 	static char buf[10];
 	if(size > GB)
@@ -77,6 +63,3 @@ static char *fsize(off_t size)
 		snprintf(buf, sizeof buf, "%d", (int)size);
 	return buf;
 }
-
-//-----------------------------------------------------------------------------
-#endif /* __FMODE_H__ */

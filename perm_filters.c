@@ -4,18 +4,7 @@
  * Released under the GNU GPL v2 license
  */
 
-#if !defined(__PERM_FILTERS_H__)
-#define __PERM_FILTERS_H__
-
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include "options.h"
-
-#define mask(_mode, _mask) ((_mode & _mask) == _mask)
-
-//-----------------------------------------------------------------------------
-int filter_perm(const struct stat *f, config *c);
+#include "include/perm_filters.h"
 
 //-----------------------------------------------------------------------------
 int filter_perm(const struct stat *f, config *c)
@@ -40,6 +29,3 @@ int filter_perm(const struct stat *f, config *c)
 	// all checks failed, user cannot acces the file
 	return 0; 
 }
-
-//-----------------------------------------------------------------------------
-#endif /* __PERM_FILTERS_H__ */

@@ -10,10 +10,9 @@
 #include <dirent.h>
 #include <stdio.h>
 
-#include "fmode.h"
-#include "perm_filters.h"
-#include "print_entry.h"
-#include "options.h"
+#include "include/perm_filters.h"
+#include "include/print_entry.h"
+#include "include/options.h"
 
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
