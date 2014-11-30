@@ -11,4 +11,4 @@ lsa [-rwx] [-u <username] [dir]
 * -u -- user, which should have permissions (defaults to current user)
 * dir -- specify a directory (defaults to .)
 
-_Note: Keep in mind that this is desired functionality, and is not available right now!_
+_Note: If you specify user, group permissions are not checked yet!_
