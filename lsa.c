@@ -25,17 +25,8 @@ int main(int argc, char **argv)
 	config c;
 
 	opts = options(argc, argv, &c);
-	if(opts != OPT_OK)
-	{
-		// if no opts given, default to rw checking for current user
-		if(opts == OPT_EMPTY)
-		{
-			c.p.r = 1;
-			c.p.w = 1;
-		}
-		else return -1;
-	}
-	
+	if(opts != OPT_OK) return -1;
+
 	if((n = scandir(c.dir, &list, NULL, alphasort)) < 0)
 	{
 		perror("main()/scandir()");

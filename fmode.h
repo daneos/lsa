@@ -9,6 +9,7 @@
 
 #include <math.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #define GB 1073741824
 #define MB 1048576

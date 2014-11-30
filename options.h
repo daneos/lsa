@@ -14,8 +14,7 @@
 #include <linux/limits.h>
 
 #define OPT_OK		0
-#define OPT_EMPTY	1
-#define OPT_ERROR	2
+#define OPT_ERROR	1
 
 //-----------------------------------------------------------------------------
 typedef struct _rwx {
@@ -27,7 +26,8 @@ typedef struct _rwx {
 typedef struct _config {
 	rwx p;
 	int uid;
-	int gid;
+	int gids[NGROUPS_MAX];
+	int gcount;
 	char dir[PATH_MAX+1];
 } config;
 
@@ -38,14 +38,30 @@ void print_help(char *name);
 //-----------------------------------------------------------------------------
 int options(int argc, char **argv, config *c)
 {
-	int o;
+	int o, count;
 	struct passwd *user;
 	memset(c, 0, sizeof c);
-	// set dir and uid to current, should get overwritten if other specified
+	// set dir, uid and gids to current, should get overwritten if other specified
 	strncpy(c->dir, ".", sizeof c->dir);
 	c->uid = getuid();
+	if((count = getgroups(0, NULL)) == -1)
+	{
+		perror("options()/getgroups()");
+		return OPT_ERROR;
+	}
+	if((c->gcount = getgroups(count, c->gids)) == -1)
+	{
+		perror("options()/getgroups()");
+		return OPT_ERROR;
+	}
 	
-	if(argc == 1) return OPT_EMPTY;
+	// if no options passed set defaults
+	if(argc == 1)
+	{
+		c->p.r = 1;
+		c->p.w = 1;
+		return OPT_OK;
+	}
 
 	opterr = 0;
 	while((o = getopt(argc, argv, "rwxu:h")) != -1)
@@ -67,6 +83,16 @@ int options(int argc, char **argv, config *c)
 					return OPT_ERROR;
 				}
 				c->uid = user->pw_uid;
+				/*if((count = getgroupsbyname(optarg, 0, NULL)) == -1)
+				{
+					perror("options()/getgroupsbyname()");
+					return OPT_ERROR;
+				}
+				if((c->gcount = getgroupsbyname(optarg, count, c->gids)) == -1)
+				{
+					perror("options()/getgroupsbyname()");
+					return OPT_ERROR;
+				}*/
 				break;
 			case 'h':
 				print_help(argv[0]);
