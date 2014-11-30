@@ -11,8 +11,6 @@ List only these files that you have access to
 * `-u` -- user, which should have permissions (defaults to current user)
 * `dir` -- specify a directory (defaults to .)
 
-_Note: If you specify user, group permissions are not checked yet!_
-
 -
 
 ###Building & installing:
