@@ -1,11 +1,10 @@
-**lsa**
-===
+#lsa
 List only these files that you have access to
 
 -
 
-How to use:
------------
+###How to use:
+
 `lsa [-rwx] [-u <username] [dir]`
 
 * `-rwx` -- which permissions should be tested (defaults to rw)
@@ -16,8 +15,7 @@ _Note: If you specify user, group permissions are not checked yet!_
 
 -
 
-Building & installing:
-----------------------
+###Building & installing:
 * **Linux**:  
   As the build process is pretty straightforward, no makefile is included.  
   This should work on every Linux distro out there (provided you have gcc installed):  
