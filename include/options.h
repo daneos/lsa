@@ -13,7 +13,9 @@
 #include <stdio.h>
 #include <linux/limits.h>
 #include <pwd.h>
+#include <grp.h>
 #include <string.h>
+#include <sys/types.h>
 
 #define OPT_OK		0
 #define OPT_ERROR	1
@@ -27,8 +29,8 @@ typedef struct _rwx {
 
 typedef struct _config {
 	rwx p;
-	int uid;
-	int gids[NGROUPS_MAX];
+	uid_t uid;
+	gid_t gids[NGROUPS_MAX];
 	int gcount;
 	char dir[PATH_MAX+1];
 } config;

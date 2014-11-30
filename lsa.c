@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 {
 	struct stat finfo;
 	char fname[PATH_MAX+1];
-	int n,i, opts;
+	int n, i, opts;
 	struct dirent **list;
 	config c;
 

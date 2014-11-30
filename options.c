@@ -9,8 +9,9 @@
 //-----------------------------------------------------------------------------
 int options(int argc, char **argv, config *c)
 {
-	int o, count, norwx = 1;
+	int o, count = 0, norwx = 1;
 	struct passwd *user;
+	gid_t *gids = c->gids;
 	memset(c, 0, sizeof c);
 	// set dir, uid and gids to current, should get overwritten if other specified
 	strncpy(c->dir, ".", sizeof c->dir);
@@ -49,18 +50,12 @@ int options(int argc, char **argv, config *c)
 					return OPT_ERROR;
 				}
 				c->uid = user->pw_uid;
-				/*if((count = getgroupsbyname(optarg, 0, NULL)) == -1)
+				getgrouplist(optarg, user->pw_gid, c->gids, &count);
+				if((c->gcount = getgrouplist(optarg, user->pw_gid, c->gids, &count)) == -1)
 				{
-					perror("options()/getgroupsbyname()");
+					perror("options()/getgrouplist()");
 					return OPT_ERROR;
 				}
-				if((c->gcount = getgroupsbyname(optarg, count, c->gids)) == -1)
-				{
-					perror("options()/getgroupsbyname()");
-					return OPT_ERROR;
-				}*/
-				// set group count to 0 as getting other user's groups is not supported
-				c->gcount = 0;
 				break;
 			case 'h':
 				print_help(argv[0]);
