@@ -10,14 +10,35 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-//-----------------------------------------------------------------------------
-inline int filter_perm(const struct stat *f, mode_t mask);
+#include "options.h"
+
+#define mask(_mode, _mask) ((_mode & _mask) == _mask)
 
 //-----------------------------------------------------------------------------
-inline int filter_perm(const struct stat *f, mode_t mask)
+int filter_perm(const struct stat *f, config *c);
+
+//-----------------------------------------------------------------------------
+int filter_perm(const struct stat *f, config *c)
 {
-	if(mask == NULL) return 1;
-	return f->st_mode & mask;
+	int i;
+	int rmask = (c->p.r ? 1<<2 : 0);
+	int wmask = (c->p.w ? 1<<1 : 0);
+	int xmask = (c->p.x ? 1 : 0);
+
+	// check owner bits only if user is an owner
+	if(f->st_uid == c->uid)
+		if(mask(f->st_mode, rmask<<6) && mask(f->st_mode, wmask<<6) && mask(f->st_mode, xmask<<6)) return 1;
+
+	// check group bits only if user is in file's group 
+	for(i=0; i < c->gcount; i++)
+		if(f->st_gid == c->gids[i])
+			if(mask(f->st_mode, rmask<<3) && mask(f->st_mode, wmask<<3) && mask(f->st_mode, xmask<<3)) return 1;
+
+	// always check other bits (unless access is granted from any of previous checks)
+	if(mask(f->st_mode, rmask) && mask(f->st_mode, wmask) && mask(f->st_mode, xmask)) return 1;
+
+	// all checks failed, user cannot acces the file
+	return 0; 
 }
 
 //-----------------------------------------------------------------------------

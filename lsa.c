@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		if(!filter_perm(&finfo, S_IWOTH)) continue;
+		if(!filter_perm(&finfo, &c)) continue;
 		print_long(&finfo, fname, list[i]->d_name);
 	}
 	return 0;

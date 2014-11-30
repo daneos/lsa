@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <linux/limits.h>
+#include <pwd.h>
 
 #define OPT_OK		0
 #define OPT_ERROR	1
@@ -38,7 +39,7 @@ void print_help(char *name);
 //-----------------------------------------------------------------------------
 int options(int argc, char **argv, config *c)
 {
-	int o, count;
+	int o, count, norwx = 1;
 	struct passwd *user;
 	memset(c, 0, sizeof c);
 	// set dir, uid and gids to current, should get overwritten if other specified
@@ -54,14 +55,6 @@ int options(int argc, char **argv, config *c)
 		perror("options()/getgroups()");
 		return OPT_ERROR;
 	}
-	
-	// if no options passed set defaults
-	if(argc == 1)
-	{
-		c->p.r = 1;
-		c->p.w = 1;
-		return OPT_OK;
-	}
 
 	opterr = 0;
 	while((o = getopt(argc, argv, "rwxu:h")) != -1)
@@ -69,12 +62,15 @@ int options(int argc, char **argv, config *c)
 		{
 			case 'r':
 				c->p.r = 1;
+				norwx = 0;
 				break;
 			case 'w':
 				c->p.w = 1;
+				norwx = 0;
 				break;
 			case 'x':
 				c->p.x = 1;
+				norwx = 0;
 				break;
 			case 'u':
 				if((user = getpwnam(optarg)) == NULL)
@@ -93,6 +89,8 @@ int options(int argc, char **argv, config *c)
 					perror("options()/getgroupsbyname()");
 					return OPT_ERROR;
 				}*/
+				// set group count to 0 as getting other user's groups is not supported
+				c->gcount = 0;
 				break;
 			case 'h':
 				print_help(argv[0]);
@@ -109,7 +107,14 @@ int options(int argc, char **argv, config *c)
 				return OPT_ERROR;
 		}
 	if(argc > optind)
-		strncpy(c->dir, argv[optind], sizeof c->dir);		
+		strncpy(c->dir, argv[optind], sizeof c->dir);
+
+	// if no rwx flags passed, set to default
+	if(norwx)
+	{
+		c->p.r = 1;
+		c->p.w = 1;
+	}
 
 	return OPT_OK;
 }
