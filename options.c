@@ -5,6 +5,7 @@
  */
 
 #include "include/options.h"
+#include "include/version.h"
 
 //-----------------------------------------------------------------------------
 int options(int argc, char **argv, config *c)
@@ -87,12 +88,13 @@ int options(int argc, char **argv, config *c)
 //-----------------------------------------------------------------------------
 void print_help(char *name)
 {
-	printf("Copyright (C) 2014 daneos.\nReleased under the GNU GPL v2 license.\n\n"
+	printf("Version: %s\n"
+		   "Copyright (C) 2014 daneos.\nReleased under the GNU GPL v2 license.\n\n"
 		   "List only these files, you have access to\nUSAGE:\n"
 		   "   %s [-rwx] [-u username] [dir]\n\n"
 		   "   -rwx            which permissions shoud be checked (defaults to rw)\n"
 		   "   -u username     check permissions for specific user (defaults to current user)\n"
 		   "   dir             directory to list (defaults to .)\n\n"
-	, name);
+	, __VERSION, name);
 	exit(0);
 }
