@@ -47,7 +47,10 @@ int main(int argc, char **argv)
 		}
 
 		if(!filter_perm(&finfo, &c)) continue;
-		print_long(&finfo, fname, single_file_mode ? c.dir : list[i]->d_name);
+		// print entry with configured view
+		c.view ?
+			print_short(&finfo, fname, single_file_mode ? c.dir : list[i]->d_name)
+		:	print_long(&finfo, fname, single_file_mode ? c.dir : list[i]->d_name);
 	}
 	return 0;
 }

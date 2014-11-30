@@ -33,6 +33,7 @@ typedef struct _config {
 	gid_t gids[NGROUPS_MAX];
 	int gcount;
 	char dir[PATH_MAX+1];
+	int view : 1;
 } config;
 
 //-----------------------------------------------------------------------------

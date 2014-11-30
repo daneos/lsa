@@ -9,6 +9,7 @@ List only these files that you have access to
 
 * `-rwx` -- which permissions should be tested (defaults to rw)
 * `-u` -- user, which should have permissions (defaults to current user)
+* `-v` -- view: l - long, s - short _note: only first character is parsed, so you can use eg. `-v long` or `-v letmeseeallinfo`_ (defaults to l)
 * `dir` -- specify a directory (defaults to .)
 
 -

@@ -29,7 +29,7 @@ int options(int argc, char **argv, config *c)
 	}
 
 	opterr = 0;
-	while((o = getopt(argc, argv, "rwxu:h")) != -1)
+	while((o = getopt(argc, argv, "rwxu:v:h")) != -1)
 		switch(o)
 		{
 			case 'r':
@@ -58,17 +58,33 @@ int options(int argc, char **argv, config *c)
 					return OPT_ERROR;
 				}
 				break;
+			case 'v':
+				switch(optarg[0])
+				{
+					case 'l':
+						c->view = 0;
+						break;
+					case 's':
+						c->view = 1;
+						break;
+					default:
+						fprintf(stderr, "-v: not recognized view: %c\n", optarg[0]);
+						return OPT_ERROR;
+				}
+				break;
 			case 'h':
 				print_help(argv[0]);
 				break;
 			
 			case '?':
 				if(optopt == 'u')
-					fprintf(stderr, "Please provide username for -%c\n", optopt);
+					fprintf(stderr, "-%c: please provide username\n", optopt);
+				else if(optopt == 'v')
+					fprintf(stderr, "-%c: please provide view type\n", optopt);
 				else if(isprint (optopt))
-					fprintf(stderr, "Option -%c not understood.\n", optopt);
+					fprintf(stderr, "-%c: not understood\n", optopt);
 				else
-					fprintf(stderr, "Option -\\x%x not understood.\n", optopt);
+					fprintf(stderr, "-\\x%x: not understood\n", optopt);
 			default:
 				return OPT_ERROR;
 		}
@@ -90,10 +106,11 @@ void print_help(char *name)
 {
 	printf("Version: %s\nCopyright (C) 2014 daneos.\nReleased under the GNU GPL v2 license.\n\n"
 		   "List only these files, you have access to\nUSAGE:\n"
-		   "   %s [-rwx] [-u username] [dir]\n\n"
-		   "   -rwx            which permissions shoud be checked (defaults to rw)\n"
-		   "   -u username     check permissions for specific user (defaults to current user)\n"
-		   "   dir             directory to list (defaults to .)\n\n"
+		   "   %s [-rwx] [-u username] [-v s/l] [dir]\n\n"
+		   "   -rwx          which permissions shoud be checked (default: rw)\n"
+		   "   -u username   check permissions for specific user (default: current user)\n"
+		   "   -v s/l        s - short view, l - long view (default: l)"
+		   "   dir           directory to list (default: .)\n\n"
 	, __VERSION, name);
 	exit(0);
 }
