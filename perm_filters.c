@@ -15,8 +15,8 @@ int filter_perm(const struct stat *f, config *c)
 	int wmask = (c->p.w ? 1<<1 : 0);
 	int xmask = (c->p.x ? 1 : 0);
 
-	// well, root can do anything but executing not -x files, he can even pass non-x directories
-	if((c->uid == 0) && (((mask(f->st_mode, xmask<<6)) && (mask(f->st_mode, xmask<<3)) && (mask(f->st_mode, xmask))) || ftype(f->st_mode) == 'd'))
+	// well, root can do anything but executing non-x files, he can even pass non-x directories
+	if((c->uid == 0) && ((mask(f->st_mode, xmask<<6) && mask(f->st_mode, xmask<<3) && mask(f->st_mode, xmask)) || ftype(f->st_mode) == 'd'))
 		return 1;
 
 	// check owner bits only if user is an owner
