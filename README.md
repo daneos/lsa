@@ -5,10 +5,12 @@ List only these files that you have access to
 
 ###How to use:
 
-`lsa [-rwx] [-u <username] [dir]`
+`lsa [-rwx] [-u username] [-v view] [dir]`
 
 * `-rwx` -- which permissions should be tested (defaults to rw)
 * `-u` -- user, which should have permissions (defaults to current user)
+* `-v` -- view: l - long, s - short, m - minimal (defaults to l)  
+  _note: only first character is parsed, so you can use eg. `-v long` or `-v letmeseeallinfo`_  
 * `dir` -- specify a directory (defaults to .)
 
 -

@@ -47,7 +47,21 @@ int main(int argc, char **argv)
 		}
 
 		if(!filter_perm(&finfo, &c)) continue;
-		print_long(&finfo, fname, single_file_mode ? c.dir : list[i]->d_name);
+		// print entry with configured view
+		switch(c.view)
+		{
+			case VIEW_SHORT:
+				print_short(&finfo, single_file_mode ? c.dir : fname, single_file_mode ? c.dir : list[i]->d_name);
+				break;
+			case VIEW_LONG:
+				print_long(&finfo, single_file_mode ? c.dir : fname, single_file_mode ? c.dir : list[i]->d_name);
+				break;
+			case VIEW_MINI:
+				print_minimal(&finfo, single_file_mode ? c.dir : fname, single_file_mode ? c.dir : list[i]->d_name);
+				break;
+			default:
+				fprintf(stderr, "main()/c.view: Oops! Something went wrong!\n");
+		}
 	}
 	return 0;
 }

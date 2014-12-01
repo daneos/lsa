@@ -21,7 +21,9 @@
 #include "fmode.h"
 
 //-----------------------------------------------------------------------------
-void print_long(const struct stat *f, const char *fname, const char *d_name);
+void print_long(const struct stat *f, const char *fname, const char *dname);
+void print_short(const struct stat *f, const char *fname, const char *dname);
+void print_minimal(const struct stat *f, const char *fname, const char *dname);
 
 //-----------------------------------------------------------------------------
 #endif /* __PRINT_ENTRY_H__ */ 

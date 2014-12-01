@@ -7,6 +7,6 @@
 #if !defined(__VERSION_H__)
 #define __VERSION_H__
 
-#define __VERSION "1.0.0"
+#define __VERSION "1.0.1"
 
 #endif /* __VERSION_H__ */
