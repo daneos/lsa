@@ -20,6 +20,10 @@
 #define OPT_OK		0
 #define OPT_ERROR	1
 
+#define VIEW_LONG	0
+#define VIEW_SHORT	1
+#define VIEW_MINI	2
+
 //-----------------------------------------------------------------------------
 typedef struct _rwx {
 	int r : 1;
@@ -33,7 +37,7 @@ typedef struct _config {
 	gid_t gids[NGROUPS_MAX];
 	int gcount;
 	char dir[PATH_MAX+1];
-	int view : 1;
+	short view;
 } config;
 
 //-----------------------------------------------------------------------------

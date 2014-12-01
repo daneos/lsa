@@ -62,10 +62,13 @@ int options(int argc, char **argv, config *c)
 				switch(optarg[0])
 				{
 					case 'l':
-						c->view = 0;
+						c->view = VIEW_LONG;
 						break;
 					case 's':
-						c->view = 1;
+						c->view = VIEW_SHORT;
+						break;
+					case 'm':
+						c->view = VIEW_MINI;
 						break;
 					default:
 						fprintf(stderr, "-v: not recognized view: %c\n", optarg[0]);
@@ -106,10 +109,10 @@ void print_help(char *name)
 {
 	printf("Version: %s\nCopyright (C) 2014 daneos.\nReleased under the GNU GPL v2 license.\n\n"
 		   "List only these files, you have access to\nUSAGE:\n"
-		   "   %s [-rwx] [-u username] [-v s/l] [dir]\n\n"
+		   "   %s [-rwx] [-u username] [-v s/l/m] [dir]\n\n"
 		   "   -rwx          which permissions shoud be checked (default: rw)\n"
 		   "   -u username   check permissions for specific user (default: current user)\n"
-		   "   -v s/l        s - short view, l - long view (default: l)"
+		   "   -v s/l/m      s - short view, l - long view, m - minimal view (default: l)\n"
 		   "   dir           directory to list (default: .)\n\n"
 	, __VERSION, name);
 	exit(0);

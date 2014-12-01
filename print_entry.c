@@ -82,3 +82,9 @@ void print_short(const struct stat *f, const char *fname, const char *dname)
 	// print name and destination (if applicable)
 	printf("  %s%s\n", dname, link);
 }
+
+//-----------------------------------------------------------------------------
+void print_minimal(const struct stat *f, const char *fname, const char *dname)
+{
+	printf("%c %s\n", ftype(f->st_mode), dname);
+}
